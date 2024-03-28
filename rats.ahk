@@ -16,12 +16,10 @@ Class MiceGui extends Gui{
             }
                   
             mice.Show
-
-            
+  
       clicked(button, Info){
             %button.text%()
       }
-
       }
 
 }
