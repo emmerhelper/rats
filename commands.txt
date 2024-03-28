@@ -1,0 +1,4 @@
+addCEInAcademicStructure
+addLectureInAcademicStructure
+addTutorialInAcademicStructure
+addAllInAcademicStructure
