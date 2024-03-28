@@ -1,5 +1,6 @@
 #Requires AutoHotkey v2.0 
 #Include utils.ahk
+#Include classes\event.ahk
 TraySetIcon("rat.png")
 mice := MiceGui()
 
@@ -98,4 +99,16 @@ addAllInAcademicStructure(){
       addCEInAcademicStructure()
       addLectureInAcademicStructure()
       addTutorialInAcademicStructure()
+}
+
+addSchedulingRule(){
+      session := sapActiveSession()
+      gridView := session.findByID("wnd[0]/usr/subSUB_WLT:SAPLHRPIQ00ACADOFFER_OVW:0130/cntlCONTAINER/shellcont/shell")
+      scheduledEvent := event(gridView)
+      scheduledEvent.scheduleRegular(session,gridView)
+      
+
+
+
+
 }
