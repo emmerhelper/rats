@@ -1,0 +1,4 @@
+addCE
+addLecture
+addTutorial
+addAll

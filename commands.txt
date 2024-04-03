@@ -1,5 +1,0 @@
-addCEInAcademicStructure
-addLectureInAcademicStructure
-addTutorialInAcademicStructure
-addAllInAcademicStructure
-addSchedulingRule

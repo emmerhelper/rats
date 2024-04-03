@@ -1,6 +1,7 @@
 #Requires AutoHotkey v2.0 
 #Include utils.ahk
 #Include classes\event.ahk
+#Include classes\assessment.ahk
 TraySetIcon("rat.png")
 mice := MiceGui()
 
@@ -10,11 +11,26 @@ Class MiceGui extends Gui{
             mice := Gui(,"Rats")
             mice.SetFont("s12")
             
-            loop read "commands.txt" {
-                  
-                  this.%A_LoopReadLine% := mice.AddButton(,A_LoopReadLine)
-                  this.%A_LoopReadLine%.OnEvent("click",clicked)
+            tabs := []
+
+            loop files "commands\*.txt" {
+                  tabs.Push(SubStr(A_LoopFileName,1,StrLen(A_LoopFileName)-4))
             }
+
+            tabControl := mice.AddTab3(,tabs)
+
+            for k, v in tabs {
+
+                  tabControl.UseTab(k)
+
+                  loop read "commands\" v ".txt"  {
+                  
+                        this.%A_LoopReadLine% := mice.AddButton(,A_LoopReadLine)
+                        this.%A_LoopReadLine%.OnEvent("click",clicked)
+                  }
+
+            }
+
                   
             mice.Show
   
@@ -25,7 +41,7 @@ Class MiceGui extends Gui{
 
 }
 
-addCEInAcademicStructure(){
+addCE(){
       session := sapActiveSession()
       selectedNode := academicStructureCreateChildNode(session,"CE","EX","Exam")
 
@@ -47,7 +63,7 @@ addCEInAcademicStructure(){
       session.findByID("wnd[0]/mbar/menu[0]/menu[5]").select()
 }
 
-addLectureInAcademicStructure(){
+addLecture(){
       session := sapActiveSession()
 
       selectedNode := academicStructureCreateChildNode(session,"D","LC","Lecture")
@@ -71,7 +87,7 @@ addLectureInAcademicStructure(){
 }
 
 
-addTutorialInAcademicStructure(){
+addTutorial(){
       session := sapActiveSession()
 
       selectedNode := academicStructureCreateChildNode(session,"D","TU","Tutorial")
@@ -95,18 +111,39 @@ addTutorialInAcademicStructure(){
       session.findByID("wnd[0]/mbar/menu[0]/menu[5]").select()
 }
 
-addAllInAcademicStructure(){
-      addCEInAcademicStructure()
-      addLectureInAcademicStructure()
-      addTutorialInAcademicStructure()
+addAll(){
+      addCE()
+      addLecture()
+      addTutorial()
 }
 
 addSchedulingRule(){
       session := sapActiveSession()
-      gridView := session.findByID("wnd[0]/usr/subSUB_WLT:SAPLHRPIQ00ACADOFFER_OVW:0130/cntlCONTAINER/shellcont/shell")
-      scheduledEvent := event(gridView)
-      scheduledEvent.scheduleRegular(session,gridView)
-      
+      loop {
+            gridView := session.findByID("wnd[0]/usr/subSUB_WLT:SAPLHRPIQ00ACADOFFER_OVW:0130/cntlCONTAINER/shellcont/shell")
+                  gridview.selectedRows := "0"
+                  scheduledEvent := event(gridView)
+                  scheduledEvent.scheduleRegular(session,gridView)
+
+      }
+}
+
+scheduleAssessments(){
+      inputScreen := Gui(,"Modules")
+      modules := inputscreen.AddEdit("r10",)
+      confirm := inputscreen.AddButton(,"Confirm")
+      confirm.OnEvent("Click",submit)
+      inputScreen.show()
+
+      submit(button,info){
+            inputscreen.Hide()
+            moduleArray := StrSplit(Trim(modules.value,"`n"),"`n")
+            for k,v in modulearray {
+                  scheduledAssessment := assessment(v)
+                  scheduledAssessment.schedule()
+            }
+      }
+
 
 
 
